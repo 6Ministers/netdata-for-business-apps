@@ -6,9 +6,12 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - /opt/Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./certs:/certs
+      - ./config:/config
+      - ./data:/data
+      - ./sites:/srv
+      
   netdata:
     image: netdata/netdata
     container_name: netdata
@@ -33,7 +36,6 @@ services:
       - /var/log:/host/var/log:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
 volumes:
-  caddy_data:
-  caddy_config:
+  netdataconfig:
   netdatalib:
   netdatacache:
