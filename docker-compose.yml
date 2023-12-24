@@ -1,34 +1,39 @@
-version: "3.8"
-
+version: '3'
 services:
   caddy:
     image: caddy:alpine
-    restart: unless-stopped
-    container_name: caddy
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - ./certs:/certs
-      - ./config:/config
-      - ./data:/data
-      - ./sites:/srv
-    network_mode: "host"
-
-  onlyoffice-documentserver:
-    image: thomisus/onlyoffice-documentserver-unlimited:7.5.1
-    restart: always
-    environment:
-      - JWT_ENABLED=true
-      - JWT_HEADER=AuthorizationJwt
-
     ports:
-      - 127.0.0.1:2291:80
+      - "80:80"
+      - "443:443"
     volumes:
-      - ./onlyoffice/logs:/var/log/onlyoffice
-      - ./onlyoffice/data:/var/www/onlyoffice/Data
-      - ./onlyoffice/lib:/var/lib/onlyoffice
-      - ./onlyoffice/rabbitmq:/var/lib/rabbitmq
-      - ./onlyoffice/redis:/var/lib/redis
-      - ./onlyoffice/db:/var/lib/postgresql
-
-    depends_on:
-      - caddy
+      - /opt/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: example.com # set to fqdn of host
+    restart: always
+    pid: host
+    cap_add:
+      - SYS_PTRACE
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - netdataconfig:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/cache/netdata
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /var/log:/host/var/log:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+volumes:
+  caddy_data:
+  caddy_config:
+  netdatalib:
+  netdatacache:
