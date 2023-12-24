@@ -62,7 +62,7 @@ https://subdomain.your-domain:443 {
 docker-compose up -d
 ```
 
-Then open `https://netdata.domain.com:` to access OnlyOffice
+Then open `https://netdata.domain.com:` to access NetData
 
 
 ## Netdata container management
