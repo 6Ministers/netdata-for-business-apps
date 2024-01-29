@@ -1,7 +1,7 @@
 https://subdomain.your-domain:443 {
     header Strict-Transport-Security max-age=31536000;
     reverse_proxy netdata:19999
-	tls admin@example.org
+#	tls admin@example.org
 	encode zstd gzip
 	
 	# Secure headers, all from .htaccess except Permissions-Policy, STS and X-Powered-By
